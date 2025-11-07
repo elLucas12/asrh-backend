@@ -24,7 +24,7 @@ export class CadastraFuncionario_UC {
       funcao: dados.funcao,
       setor: dados.setor
     };
-    let funcionario = this.#servicoCadastramento.cadastrarFuncionario(dadosFuncionario);
+    let funcionario = await this.#servicoCadastramento.cadastrarFuncionario(dadosFuncionario);
     return dadosFuncionario;
   }
 }

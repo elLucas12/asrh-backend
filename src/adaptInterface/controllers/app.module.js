@@ -11,6 +11,7 @@ import { UsuarioSistema } from '../persistence/entities/UsuarioSistema.entity';
 
 import { ServicoCadastramento } from '../../domain/services/ServicoCadastramento.service';
 import { CadastraFuncionario_UC } from '../../application/CadastraFuncionario';
+import { RegistraEscala_UC } from '../../application/RegistraEscala';
 
 @Module({
   imports: [
@@ -43,8 +44,9 @@ import { CadastraFuncionario_UC } from '../../application/CadastraFuncionario';
   ],
   controllers: [AppController],
   providers: [
-    ServicoCadastramento,
-    CadastraFuncionario_UC
+    RegistraEscala_UC,
+    CadastraFuncionario_UC,
+    ServicoCadastramento
   ],
 })
 export class AppModule {}
