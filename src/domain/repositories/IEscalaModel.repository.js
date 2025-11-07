@@ -4,4 +4,5 @@ export class IEscalaModelRepository {
   atualizar(id, escala) {}
   consultar(id) {}
   consultarPorNome(nome) {}
+  todos() {}
 }

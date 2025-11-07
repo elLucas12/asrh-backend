@@ -12,6 +12,12 @@ import { UsuarioSistema } from '../persistence/entities/UsuarioSistema.entity';
 import { ServicoCadastramento } from '../../domain/services/ServicoCadastramento.service';
 import { CadastraFuncionario_UC } from '../../application/CadastraFuncionario';
 import { RegistraEscala_UC } from '../../application/RegistraEscala';
+import { ConsultaTodosFuncionarios_UC } from '../../application/ConsultaTodosFuncionarios';
+import { ConsultaTodosEscala_UC } from '../../application/ConsultaTodosEscala';
+import { AtualizaFuncionario_UC } from '../../application/AtualizaFuncionario';
+import { ConsultaFuncionario_UC } from '../../application/ConsultaFuncionario';
+import { ConsultaEscala_UC } from '../../application/ConsultaEscala';
+import { AtualizaEscala_UC } from '../../application/AtualizaEscala';
 
 @Module({
   imports: [
@@ -44,9 +50,15 @@ import { RegistraEscala_UC } from '../../application/RegistraEscala';
   ],
   controllers: [AppController],
   providers: [
-    RegistraEscala_UC,
+    ServicoCadastramento,
     CadastraFuncionario_UC,
-    ServicoCadastramento
+    ConsultaTodosFuncionarios_UC,
+    AtualizaFuncionario_UC,
+    ConsultaFuncionario_UC,
+    RegistraEscala_UC,
+    ConsultaTodosEscala_UC,
+    ConsultaEscala_UC,
+    AtualizaEscala_UC
   ],
 })
 export class AppModule {}

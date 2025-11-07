@@ -19,12 +19,38 @@ export class CadastraFuncionario_UC {
       telefone: dados.telefone,
       email: dados.email,
       endereco: dados.endereco,
-      salario: dados.salario,
-      escala: dados.escala,
       funcao: dados.funcao,
-      setor: dados.setor
+      dataAdmissao: dados.dataAdmissao,
+      dataDemissao: dados.dataDemissao
     };
     let funcionario = await this.#servicoCadastramento.cadastrarFuncionario(dadosFuncionario);
-    return dadosFuncionario;
+    return {
+      id: funcionario.id,
+      nome: funcionario.nome,
+      cpf: funcionario.cpf,
+      rg: funcionario.rg,
+      ctps: funcionario.ctps,
+      telefone: funcionario.telefone,
+      email: funcionario.email,
+      endereco: funcionario.endereco,
+      funcao: {
+        id: funcionario.funcao.id,
+        nome: funcionario.funcao.nome,
+        setor: {
+          id: funcionario.funcao.setor.id,
+          nome: funcionario.funcao.setor.nome,
+          descricao: funcionario.funcao.setor.descricao,
+          descricaoAtividades: funcionario.funcao.setor.descricaoAtividades
+        },
+        escala: {
+          id: funcionario.funcao.escala.id,
+          nome: funcionario.funcao.escala.nome,
+          horasDiarias: funcionario.funcao.escala.horasDiarias,
+          diasSemana: funcionario.funcao.escala.diasSemana
+        }
+      },
+      dataAdmissao: funcionario.dataAdmissao,
+      dataDemissao: funcionario.dataDemissao
+    };
   }
 }

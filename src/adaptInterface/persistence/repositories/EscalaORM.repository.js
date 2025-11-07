@@ -64,6 +64,18 @@ export class EscalaORMRepository extends IEscalaModelRepository {
     const resp = await this.#escalaRepo.findOneBy({id});
     return EscalaORMRepository.createFromObject(resp);
   }
+
+  /**
+   * Recupera e constrói todas as instâncias de Escala armazenadas 
+   * no sistema.
+   * 
+   * @return Lista com todas as Escalas registradas, em forma de 
+   * objeto já construido.
+   */
+  async todos() {
+    const resp = await this.#escalaRepo.find();
+    return resp.map(EscalaORMRepository.createFromObject);
+  }
   
   /**
    * Consulta uma instância Escala, ou mais, por meio de seu nome,
