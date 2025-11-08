@@ -3,7 +3,7 @@ import { ServicoCadastramento } from "../domain/services/ServicoCadastramento.se
 
 @Injectable()
 @Dependencies(ServicoCadastramento)
-export class RegistraFuncao_UC {
+export class AtualizaFuncao_UC {
   /** Objeto do Serviço de Cadastramento de pessoal. */
   #servicoCadastramento;
 
@@ -11,8 +11,8 @@ export class RegistraFuncao_UC {
     this.#servicoCadastramento = servicoCadastramento;
   }
 
-  async run(dados) {
-    let funcao = await this.#servicoCadastramento.registrarFuncao(dados);
+  async run(id, dados) {
+    let funcao = await this.#servicoCadastramento.atualizarFuncao(id, dados);
     return {
       id: funcao.id,
       nome: funcao.nome,

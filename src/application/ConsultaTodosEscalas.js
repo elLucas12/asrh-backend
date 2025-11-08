@@ -3,7 +3,7 @@ import { ServicoCadastramento } from "../domain/services/ServicoCadastramento.se
 
 @Injectable()
 @Dependencies(ServicoCadastramento)
-export class ConsultaTodosEscala_UC {
+export class ConsultaTodosEscalas_UC {
   #servicoCadastramento;
 
   constructor(servicoCadastramento) {

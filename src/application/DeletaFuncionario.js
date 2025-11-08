@@ -3,7 +3,7 @@ import { ServicoCadastramento } from "../domain/services/ServicoCadastramento.se
 
 @Injectable()
 @Dependencies(ServicoCadastramento)
-export class ConsultaFuncionario_UC {
+export class DeletaFuncionario_UC {
   /** Objeto do Serviço de Cadastramento de pessoal. */
   #servicoCadastramento;
 
@@ -12,7 +12,7 @@ export class ConsultaFuncionario_UC {
   }
 
   async run(id) {
-    let funcionario = await this.#servicoCadastramento.consultarFuncionario(id);
+    let funcionario = await this.#servicoCadastramento.deletarFuncionario(id);
     return {
       id: funcionario.id,
       nome: funcionario.nome,

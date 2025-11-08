@@ -11,19 +11,7 @@ export class CadastraFuncionario_UC {
   }
   
   async run(dados) {
-    let dadosFuncionario = {
-      nome: dados.nome,
-      cpf: dados.cpf,
-      rg: dados.rg,
-      ctps: dados.ctps,
-      telefone: dados.telefone,
-      email: dados.email,
-      endereco: dados.endereco,
-      funcao: dados.funcao,
-      dataAdmissao: dados.dataAdmissao,
-      dataDemissao: dados.dataDemissao
-    };
-    let funcionario = await this.#servicoCadastramento.cadastrarFuncionario(dadosFuncionario);
+    let funcionario = await this.#servicoCadastramento.cadastrarFuncionario(dados);
     return {
       id: funcionario.id,
       nome: funcionario.nome,
@@ -50,7 +38,8 @@ export class CadastraFuncionario_UC {
         }
       },
       dataAdmissao: funcionario.dataAdmissao,
-      dataDemissao: funcionario.dataDemissao
+      dataDemissao: funcionario.dataDemissao,
+      flag: flag
     };
   }
 }

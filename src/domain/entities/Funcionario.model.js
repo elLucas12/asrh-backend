@@ -15,6 +15,7 @@ export class FuncionarioModel {
   funcao;
   dataAdmissao;
   dataDemissao;
+  flag;
 
   constructor(
     id,
@@ -27,7 +28,8 @@ export class FuncionarioModel {
     endereco,
     funcao,
     dataAdmissao,
-    dataDemissao
+    dataDemissao,
+    flag
   ) {
     this.id = id;
     this.nome = nome;
@@ -40,5 +42,6 @@ export class FuncionarioModel {
     this.funcao = funcao;
     this.dataAdmissao = dataAdmissao;
     this.dataDemissao = dataDemissao;
+    this.flag = flag;
   }
 }

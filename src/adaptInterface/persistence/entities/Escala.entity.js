@@ -6,8 +6,8 @@ export class Escala {
   id;
   @Column("varchar")
   nome;
-  @Column("integer")
+  @Column("int")
   horasDiarias;
-  @Column("integer") // limite de 7 dias estabelecido por software
+  @Column("int") // limite de 7 dias estabelecido por software
   diasSemana;
 }

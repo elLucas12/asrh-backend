@@ -118,7 +118,8 @@ export class FuncionarioORMRepository extends IFuncionarioModelRepository {
     endereco,
     funcao,
     dataAdmissao,
-    dataDemissao
+    dataDemissao,
+    flag
    }) {
     let funcionarioEntityModel = new FuncionarioModel(
       id,
@@ -131,7 +132,8 @@ export class FuncionarioORMRepository extends IFuncionarioModelRepository {
       endereco,
       funcao,
       dataAdmissao,
-      dataDemissao
+      dataDemissao,
+      flag
     );
     return funcionarioEntityModel;
   }

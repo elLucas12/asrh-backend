@@ -99,11 +99,13 @@ export class EscalaORMRepository extends IEscalaModelRepository {
    * @returns Objeto da entidade Escala construido.
    */
   static createFromObject({
+    id,
     nome,
     horasDiarias,
     diasSemana
   }) {
     return (new EscalaModel (
+      id,
       nome,
       horasDiarias,
       diasSemana

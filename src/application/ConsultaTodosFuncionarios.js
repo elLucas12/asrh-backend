@@ -40,7 +40,8 @@ export class ConsultaTodosFuncionarios_UC {
           }
         },
         dataAdmissao: funcionario.dataAdmissao,
-        dataDemissao: funcionario.dataDemissao
+        dataDemissao: funcionario.dataDemissao,
+        flag: flag
       };
     });
   }

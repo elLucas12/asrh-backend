@@ -1,17 +1,18 @@
-import { Injectable, Dependencies } from "@nextjs/common";
+import { Injectable, Dependencies } from "@nestjs/common";
 import { ServicoCadastramento } from "../domain/services/ServicoCadastramento.service";
 
 @Injectable()
 @Dependencies(ServicoCadastramento)
-export class RegistraSetor_UC {
+export class DeletaSetor_UC {
+  /** Objeto do Serviço de Cadastramento de pessoal. */
   #servicoCadastramento;
 
   constructor(servicoCadastramento) {
     this.#servicoCadastramento = servicoCadastramento;
   }
 
-  async run(dados) {
-    let setor = await this.#servicoCadastramento.registrarSetor(dados);
+  async run(id) {
+    let setor = await this.#servicoCadastramento.deletarSetor(id);
     return {
       id: setor.id,
       nome: setor.nome,

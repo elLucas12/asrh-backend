@@ -7,11 +7,11 @@ export class Funcionario {
   id;
   @Column("varchar")
   nome;
-  @Column("varchar")
+  @Column("char", { lenght: 11 })
   cpf;
-  @Column("varchar")
+  @Column("char", { lenght: 9 })
   rg;
-  @Column("varchar")
+  @Column("char", { lenght: 12 })
   ctps;
   @Column("varchar")
   telefone;
@@ -25,4 +25,6 @@ export class Funcionario {
   dataAdmissao;
   @Column("data")
   dataDemissao;
+  @Column("int")
+  flag;
 }

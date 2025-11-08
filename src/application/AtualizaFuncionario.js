@@ -39,7 +39,8 @@ export class AtualizaFuncionario_UC {
         }
       },
       dataAdmissao: funcionario.dataAdmissao,
-      dataDemissao: funcionario.dataDemissao
+      dataDemissao: funcionario.dataDemissao,
+      flag: flag
     };
   }
 }
