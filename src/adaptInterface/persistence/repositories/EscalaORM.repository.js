@@ -1,5 +1,6 @@
 import { Injectable, Dependencies } from "@nestjs/common";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { Like } from "typeorm";
 
 import { Escala } from "../entities/Escala.entity";
 import { IEscalaModelRepository } from "../../../domain/repositories/IEscalaModel.repository";
@@ -14,6 +15,7 @@ export class EscalaORMRepository extends IEscalaModelRepository {
   #escalaRepo;
   
   constructor(escalas) {
+    super();
     this.#escalaRepo = escalas;
   }
 
@@ -36,6 +38,9 @@ export class EscalaORMRepository extends IEscalaModelRepository {
    */
   async deletar(id) {
     const resp = await this.#escalaRepo.delete(id);
+    if (!resp) {
+      return resp;
+    }
     return EscalaORMRepository.createFromObject(resp);
   }
   
@@ -48,10 +53,11 @@ export class EscalaORMRepository extends IEscalaModelRepository {
    */
   async atualizar(id, escala) {
     let escalaAlvo = await this.#escalaRepo.findOneBy({id});
-    if (escalaAlvo !== undefined) {
-      const resp = await this.#escalaRepo.save(escala);
-      return EscalaORMRepository.createFromObject(resp);
+    if (!escalaAlvo) {
+      return escalaAlvo;
     }
+    const resp = await this.#escalaRepo.save(escala);
+    return EscalaORMRepository.createFromObject(resp);
   }
   
   /**
@@ -62,6 +68,9 @@ export class EscalaORMRepository extends IEscalaModelRepository {
    */
   async consultar(id) {
     const resp = await this.#escalaRepo.findOneBy({id});
+    if (!resp) {
+      return resp;
+    }
     return EscalaORMRepository.createFromObject(resp);
   }
 
@@ -86,7 +95,7 @@ export class EscalaORMRepository extends IEscalaModelRepository {
   async consultarPorNome(nome) {
     const resp = await this.#escalaRepo.find({
       where: {
-        nome: nome
+        nome: Like(`%${nome}%`)
       }
     });
     return resp.map(EscalaORMRepository.createFromObject);

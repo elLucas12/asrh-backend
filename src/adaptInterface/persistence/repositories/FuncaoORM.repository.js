@@ -1,9 +1,12 @@
 import { Injectable, Dependencies } from "@nestjs/common";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { Like } from "typeorm";
 
 import { Funcao } from "../entities/Funcao.entity";
 import { IFuncaoModelRepository } from "../../../domain/repositories/IFuncaoModel.repository";
 import { FuncaoModel } from "../../../domain/entities/Funcao.model";
+import { SetorModel } from "../../../domain/entities/Setor.model";
+import { EscalaModel } from "../../../domain/entities/Escala.model";
 
 @Injectable()
 @Dependencies(getRepositoryToken(Funcao))
@@ -14,6 +17,7 @@ export class FuncaoORMRepository extends IFuncaoModelRepository {
   #funcaoRepo;
   
   constructor(funcoes) {
+    super();
     this.#funcaoRepo = funcoes;
   }
 
@@ -36,6 +40,9 @@ export class FuncaoORMRepository extends IFuncaoModelRepository {
    */
   async deletar(id) {
     const resp = await this.#funcaoRepo.delete(id);
+    if (!resp) {
+      return resp;
+    }
     return FuncaoORMRepository.createFromObject(resp);
   }
   
@@ -48,10 +55,11 @@ export class FuncaoORMRepository extends IFuncaoModelRepository {
    */
   async atualizar(id, funcao) {
     let funcaoAlvo = await this.#funcaoRepo.findOneBy({id});
-    if (funcaoAlvo !== undefined) {
-      const resp = await this.#funcaoRepo.save(funcao);
-      return FuncaoORMRepository.createFromObject(resp);
+    if (!funcaoAlvo) {
+      return funcaoAlvo;
     }
+    const resp = await this.#funcaoRepo.save(funcao);
+    return FuncaoORMRepository.createFromObject(resp);
   }
   
   /**
@@ -62,6 +70,9 @@ export class FuncaoORMRepository extends IFuncaoModelRepository {
    */
   async consultar(id) {
     const resp = await this.#funcaoRepo.findOneBy({id});
+    if (!resp) {
+      return resp;
+    }
     return FuncaoORMRepository.createFromObject(resp);
   }
 
@@ -86,7 +97,7 @@ export class FuncaoORMRepository extends IFuncaoModelRepository {
   async consultarPorNome(nome) {
     const resp = await this.#funcaoRepo.find({
       where: {
-        nome: nome
+        nome: Like(`%${nome}%`)
       }
     });
     return resp.map(FuncaoORMRepository.createFromObject);
@@ -105,6 +116,18 @@ export class FuncaoORMRepository extends IFuncaoModelRepository {
     setor,
     escala
   }) {
+    // let setorModel = new SetorModel(
+    //   setor.id,
+    //   setor.nome,
+    //   setor.descricao,
+    //   setor.escala
+    // );
+    // let escalaModel = new EscalaModel(
+    //   escala.id,
+    //   escala.nome,
+    //   escala.horasDiarias,
+    //   escala.diasSemana
+    // );
     return (new FuncaoModel (
       id,
       nome,

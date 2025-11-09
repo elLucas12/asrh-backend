@@ -1,5 +1,6 @@
 import { Injectable, Dependencies } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Like } from "typeorm";
 
 import { Funcionario } from '../entities/Funcionario.entity';
 import { FuncionarioModel } from '../../../domain/entities/Funcionario.model';
@@ -36,6 +37,9 @@ export class FuncionarioORMRepository extends IFuncionarioModelRepository {
    */
   async arquivar(id) {
     const resp = await this.#funcionariosRepo.delete(id);
+    if (!resp) {
+      return resp;
+    }
     return FuncionarioORMRepository.createFromObject(resp);
   }
 
@@ -68,10 +72,11 @@ export class FuncionarioORMRepository extends IFuncionarioModelRepository {
    */
   async atualizar(id, funcionario) {
     let funcionarioAlvo = await this.#funcionariosRepo.findOneBy({id});
-    if (funcionarioAlvo !== undefined) {
-      const resp = await this.#funcionariosRepo.save(funcionario);
-      return FuncionarioORMRepository.createFromObject(resp);
+    if (!funcionarioAlvo) {
+      return funcionarioAlvo;
     }
+    const resp = await this.#funcionariosRepo.save(funcionario);
+    return FuncionarioORMRepository.createFromObject(resp);
   }
 
   /**
@@ -80,9 +85,12 @@ export class FuncionarioORMRepository extends IFuncionarioModelRepository {
    * @param {Number} codigo Número de ID da instância a ser consultada.
    * @return Lista/Unidade de obj. consultado.
    */
-  async consulta(id) {
+  async consultar(id) {
     const resp = await this.#funcionariosRepo.findOneBy({id});
-    return resp.map(FuncionarioORMRepository.createFromObject);
+    if (!resp) {
+      return resp;
+    }
+    return FuncionarioORMRepository.createFromObject(resp);
   }
 
   /**
@@ -95,7 +103,7 @@ export class FuncionarioORMRepository extends IFuncionarioModelRepository {
   async consultarPorNome(nome) {
     const resp = await this.#funcionariosRepo.find({
       where: {
-        nome: nome
+        nome: Like(`%${nome}%`)
       }
     });
     return resp.map(FuncionarioORMRepository.createFromObject);

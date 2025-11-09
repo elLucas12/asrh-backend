@@ -22,25 +22,26 @@ export class ArquivaFuncionario_UC {
       telefone: funcionario.telefone,
       email: funcionario.email,
       endereco: funcionario.endereco,
-      funcao: {
-        id: funcionario.funcao.id,
-        nome: funcionario.funcao.nome,
-        setor: {
-          id: funcionario.funcao.setor.id,
-          nome: funcionario.funcao.setor.nome,
-          descricao: funcionario.funcao.setor.descricao,
-          descricaoAtividades: funcionario.funcao.setor.descricaoAtividades
-        },
-        escala: {
-          id: funcionario.funcao.escala.id,
-          nome: funcionario.funcao.escala.nome,
-          horasDiarias: funcionario.funcao.escala.horasDiarias,
-          diasSemana: funcionario.funcao.escala.diasSemana
-        }
-      },
+      funcao: funcionario.funcao,
+      // funcao: {
+      //   id: funcionario.funcao.id,
+      //   nome: funcionario.funcao.nome,
+      //   setor: {
+      //     id: funcionario.funcao.setor.id,
+      //     nome: funcionario.funcao.setor.nome,
+      //     descricao: funcionario.funcao.setor.descricao,
+      //     descricaoAtividades: funcionario.funcao.setor.descricaoAtividades
+      //   },
+      //   escala: {
+      //     id: funcionario.funcao.escala.id,
+      //     nome: funcionario.funcao.escala.nome,
+      //     horasDiarias: funcionario.funcao.escala.horasDiarias,
+      //     diasSemana: funcionario.funcao.escala.diasSemana
+      //   }
+      // },
       dataAdmissao: funcionario.dataAdmissao,
       dataDemissao: funcionario.dataDemissao,
-      flag: flag
+      flag: funcionario.flag
     };
   }
 }

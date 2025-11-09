@@ -3,20 +3,19 @@ import { ServicoCadastramento } from "../domain/services/ServicoCadastramento.se
 
 @Injectable()
 @Dependencies(ServicoCadastramento)
-export class RegistraSetor_UC {
+export class AtualizaUsuarioSistema_UC {
   #servicoCadastramento;
 
   constructor(servicoCadastramento) {
     this.#servicoCadastramento = servicoCadastramento;
   }
 
-  async run(dados) {
-    let setor = await this.#servicoCadastramento.registrarSetor(dados);
+  async run(id, dados) {
+    let usuarioSistema = await this.#servicoCadastramento.atualizarUsuarioSistema(id, dados);
     return {
-      id: setor.id,
-      nome: setor.nome,
-      descricao: setor.descricao,
-      descricaoAtividades: setor.descricaoAtividades
+      id: usuarioSistema.id,
+      usuario: usuarioSistema.usuario,
+      // senha: usuarioSistema.senha
     };
   }
 }

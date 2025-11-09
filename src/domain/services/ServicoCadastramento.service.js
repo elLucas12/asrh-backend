@@ -1,9 +1,16 @@
-import { Injectable, Dependencies, NotFoundException } from '@nestjs/common';
+import { Injectable, Dependencies } from '@nestjs/common';
 
 import { FuncionarioORMRepository } from '../../adaptInterface/persistence/repositories/FuncionarioORM.repository';
 import { EscalaORMRepository } from '../../adaptInterface/persistence/repositories/EscalaORM.repository';
 import { FuncaoORMRepository } from '../../adaptInterface/persistence/repositories/FuncaoORM.repository';
 import { SetorORMRepository } from '../../adaptInterface/persistence/repositories/SetorORM.repository';
+import { UsuarioSistemaORMRepository } from '../../adaptInterface/persistence/repositories/UsuarioSistemaORM.repository';
+
+import { FuncionarioInexistenteError } from '../../adaptInterface/persistence/exceptions/FuncionarioInexistenteError';
+import { EscalaInexistenteError } from '../../adaptInterface/persistence/exceptions/EscalaInexistenteError';
+import { FuncaoInexistenteError } from '../../adaptInterface/persistence/exceptions/FuncaoInexistenteError';
+import { SetorInexistenteError } from '../../adaptInterface/persistence/exceptions/SetorInexistenteError';
+import { UsuarioSistemaInexistenteError } from '../../adaptInterface/persistence/exceptions/UsuarioSistemaInexistenteError';
 
 @Injectable()
 @Dependencies(
@@ -11,6 +18,7 @@ import { SetorORMRepository } from '../../adaptInterface/persistence/repositorie
   FuncaoORMRepository,
   SetorORMRepository,
   EscalaORMRepository,
+  UsuarioSistemaORMRepository
 )
 export class ServicoCadastramento {
   /** Repositório ORM de instâncias da entidade Funcionários */
@@ -25,16 +33,21 @@ export class ServicoCadastramento {
   /** Repositório ORM de instâncias da entidade Escala */
   #escalaRepository;
 
+  /** Repositório ORM de instâncias da entidade UsuarioSistema */
+  #usuarioSistemaRepository;
+
   constructor(
     funcionarioRepository, 
     funcaoRepository, 
     setorRepository, 
-    escalaRepository
+    escalaRepository,
+    usuarioSistemaRepository
   ) {
     this.#funcionarioRepository = funcionarioRepository;
     this.#funcaoRepository = funcaoRepository;
     this.#setorRepository = setorRepository;
     this.#escalaRepository = escalaRepository;
+    this.#usuarioSistemaRepository = usuarioSistemaRepository;
   }
 
   //////////////////////////////////////////////////
@@ -49,10 +62,11 @@ export class ServicoCadastramento {
    */
   async arquivarFuncionario(id) {
     let funcionario = await this.#funcionarioRepository.consultar(id);
-    if (funcionario !== undefined) {
-      funcionario.flag = 1;
-      return await this.#funcionarioRepository.atualizarFuncionario(id, funcionario);
+    if (!funcionario) {
+      throw new FuncionarioInexistenteError(`Entidade 'Funcionario' inexistente: ID ${id}`);
     }
+    funcionario.flag = 1;
+    return await this.#funcionarioRepository.atualizar(id, funcionario);
   }
 
   /**
@@ -62,7 +76,7 @@ export class ServicoCadastramento {
    * @returns Objeto construido da entidade ou 'undefined'.
    */
   async cadastrarFuncionario(dadosFuncionario) {
-    return await this.#funcionarioRepository.cadastrarFuncionario(dadosFuncionario);
+    return await this.#funcionarioRepository.cadastrar(dadosFuncionario);
   }
 
   /**
@@ -79,7 +93,11 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância consultada.
    */
   async consultarFuncionario(id) {
-    return await this.#funcionarioRepository.consultar(id);
+    const funcionario = await this.#funcionarioRepository.consultar(id);
+    if (!funcionario) {
+      throw new FuncionarioInexistenteError(`Entidade 'Funcionario' inexistente: ID ${id}`)
+    }
+    return funcionario;
   }
 
   /**
@@ -99,7 +117,11 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância do funcionário atualizado.
    */
   async atualizarFuncionario(id, dadosFuncionario) {
-    return await this.#funcionarioRepository.atualizar(id, dadosFuncionario);
+    const funcionario = await this.#funcionarioRepository.atualizar(id, dadosFuncionario);
+    if (!funcionario) {
+      throw new FuncionarioInexistenteError(`Entidade 'Funcionario' inexistente: ID ${id}`);
+    }
+    return funcionario;
   }
 
   /**
@@ -109,7 +131,11 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância de funcionário em questão.
    */
   async deletarFuncionario(id) {
-    return await this.#funcionarioRepository.deletar(id);
+    const funcionario = await this.#funcionarioRepository.deletar(id);
+    if (!funcionario) {
+      throw new FuncionarioInexistenteError(`Entidade 'Funcionario' inexistente: ID ${id}`);
+    }
+    return funcionario;
   }
 
   ////////////////////////////////////////////
@@ -129,7 +155,7 @@ export class ServicoCadastramento {
   /**
    * Retorna todas as instâncias da entidade Funcao existentes no sistema.
    */
-  async consultarTodosFuncaos() {
+  async consultarTodosFuncoes() {
     return await this.#funcaoRepository.todos();
   }
 
@@ -140,7 +166,11 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância consultada.
    */
   async consultarFuncao(id) {
-    return await this.#funcaoRepository.consultar(id);
+    const funcao = await this.#funcaoRepository.consultar(id);
+    if (!funcao) {
+      throw new FuncaoInexistenteError(`Entidade 'Funcao' inexistente: ID ${id}`);
+    }
+    return funcao;
   }
 
   /**
@@ -160,7 +190,11 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância da função atualizado.
    */
   async atualizarFuncao(id, dadosFuncao) {
-    return await this.#funcaoRepository.atualizar(id, dadosFuncao);
+    const funcao = await this.#funcaoRepository.atualizar(id, dadosFuncao);
+    if (!funcao) {
+      throw new FuncaoInexistenteError(`Entidade 'Funcao' inexistente: ID ${id}`);
+    }
+    return funcao;
   }
 
   /**
@@ -170,7 +204,11 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância de função em questão.
    */
   async deletarFuncao(id) {
-    return await this.#funcaoRepository.deletar(id);
+    const funcao = await this.#funcaoRepository.deletar(id);
+    if (!funcao) {
+      throw new FuncaoInexistenteError(`Entidade 'Funcao' inexistente: ID ${id}`);
+    }
+    return funcao;
   }
 
   ////////////////////////////////////////////
@@ -201,7 +239,11 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância consultada.
    */
   async consultarSetor(id) {
-    return await this.#setorRepository.consultar(id);
+    const setor = await this.#setorRepository.consultar(id);
+    if (!setor) {
+      throw new SetorInexistenteError(`Entidade 'Setor' inexistente: ID ${id}`);
+    }
+    return setor;
   }
 
   /**
@@ -221,7 +263,11 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância do setor atualizado.
    */
   async atualizarSetor(id, dadosSetor) {
-    return await this.#setorRepository.atualizar(id, dadosSetor);
+    const setor = await this.#setorRepository.atualizar(id, dadosSetor);
+    if (!setor) {
+      throw new SetorInexistenteError(`Entidade 'Setor' inexistente: ID ${id}`);
+    }
+    return setor;
   }
 
   /**
@@ -231,7 +277,11 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância de setor em questão.
    */
   async deletarSetor(id) {
-    return await this.#setorRepository.deletar(id);
+    const setor = await this.#setorRepository.deletar(id);
+    if (!setor) {
+      throw new SetorInexistenteError(`Entidade 'Setor' inexistente: ID ${id}`);
+    }
+    return setor;
   }
 
   /////////////////////////////////////////////
@@ -245,7 +295,7 @@ export class ServicoCadastramento {
    * @returns Objeto construido da entidade ou 'undefined'.
    */
   async registrarEscala(dadosEscala) {
-    return await this.#escalaRepository.registrarEscala(dadosEscala);
+    return await this.#escalaRepository.registrar(dadosEscala);
   }
 
   /**
@@ -262,7 +312,11 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância consultada.
    */
   async consultarEscala(id) {
-    return await this.#escalaRepository.consultar(id);
+    const escala = await this.#escalaRepository.consultar(id);
+    if (!escala) {
+      throw new EscalaInexistenteError(`Entidade 'Escala' inexistente: ID ${id}`);
+    }
+    return escala;
   }
 
   /**
@@ -270,7 +324,7 @@ export class ServicoCadastramento {
    * 
    * @param {string} nome String com nome, parcial ou total, para consulta. 
    */
-  async consultarEscalaPorNome(nome) {
+  async consultarEscalasPorNome(nome) {
     return await this.#escalaRepository.consultarPorNome(nome);
   }
 
@@ -282,7 +336,11 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância da escala atualizado.
    */
   async atualizarEscala(id, dadosEscala) {
-    return await this.#escalaRepository.atualizar(id, dadosEscala);
+    const escala = await this.#escalaRepository.atualizar(id, dadosEscala);
+    if (!escala) {
+      throw new EscalaInexistenteError(`Entidade 'Escala' inexistente: ID ${id}`);
+    }
+    return escala;
   }
 
   /**
@@ -292,6 +350,83 @@ export class ServicoCadastramento {
    * @returns Objeto construido da instância de escala em questão.
    */
   async deletarEscala(id) {
-    return await this.#escalaRepository.deletar(id);
+    const escala = await this.#escalaRepository.deletar(id);
+    if (!escala) {
+      throw new EscalaInexistenteError(`Entidade 'Escala' inexistente: ID ${id}`);
+    }
+    return escala;
+  }
+
+  /////////////////////////////////////////////////////
+  // MÉTODOS DE SERVIÇO DA ENTIDADE 'USUARIOSISTEMA' //
+  /////////////////////////////////////////////////////
+
+  /**
+   * Utiliza o repositório de UsuarioSistema para registrar uma instância deste.
+   * 
+   * @param {*} dadosUsuarioSistema Objeto com dados da instância a ser registrada.
+   * @returns Objeto construido da entidade ou 'undefined'.
+   */
+  async registrarUsuarioSistema(dadosUsuarioSistema) {
+    return await this.#usuarioSistemaRepository.registrar(dadosUsuarioSistema);
+  }
+
+  /**
+   * Retorna todas as instâncias da entidade UsuarioSistema existentes no sistema.
+   */
+  async consultarTodosUsuariosSistema() {
+    return await this.#usuarioSistemaRepository.todos();
+  }
+
+  /**
+   * Consulta uma instância da entidade UsuarioSistema através de seu número de ID.
+   * 
+   * @param {number} id Número de ID da instância a ser consultada.
+   * @returns Objeto construido da instância consultada.
+   */
+  async consultarUsuarioSistema(id) {
+    const usuarioSistema = await this.#usuarioSistemaRepository.consultar(id);
+    if (!usuarioSistema) {
+      throw new UsuarioSistemaInexistenteError(`Entidade 'UsuarioSistema' inexistente: ID ${id}`);
+    }
+    return usuarioSistema;
+  }
+
+  /**
+   * Consulta Usuário do Sistema por nome de usuário.
+   * 
+   * @param {string} usuario String com usuário, parcial ou total, para consulta. 
+   */
+  async consultarUsuariosSistemaPorUsuario(usuario) {
+    return await this.#usuarioSistemaRepository.consultarPorUsuario(usuario);
+  }
+
+  /**
+   * Atualiza uma instância de UsuarioSistema no sistema.
+   * 
+   * @param {number} id Número de ID do UsuarioSistema.
+   * @param {*} dadosUsuarioSistema Objeto com dados atualizados.
+   * @returns Objeto construido da instância do UsuarioSistema atualizado.
+   */
+  async atualizarUsuarioSistema(id, dadosUsuarioSistema) {
+    const usuarioSistema = await this.#usuarioSistemaRepository.atualizar(id, dadosUsuarioSistema);
+    if (!usuarioSistema) {
+      throw new UsuarioSistemaInexistenteError(`Entidade 'UsuarioSistema' inexistente: ID ${id}`);
+    }
+    return usuarioSistema;
+  }
+
+  /**
+   * Deleta uma instância de UsuarioSistema no sistema através de seu ID.
+   * 
+   * @param {number} id Número de ID do UsuarioSistema.
+   * @returns Objeto construido da instância.
+   */
+  async deletarUsuarioSistema(id) {
+    const usuarioSistema = await this.#usuarioSistemaRepository.deletar(id);
+    if (!usuarioSistema) {
+      throw new UsuarioSistemaInexistenteError(`Entidade 'UsuarioSistema' inexistente: ID ${id}`);
+    }
+    return usuarioSistema;
   }
 }

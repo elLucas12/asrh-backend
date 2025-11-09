@@ -37,6 +37,25 @@ import { ConsultaSetor_UC } from '../../application/ConsultaSetor';
 import { AtualizaSetor_UC } from '../../application/AtualizaSetor';
 import { DeletaSetor_UC } from '../../application/DeletaSetor';
 
+import { RegistraUsuarioSistema_UC } from '../../application/RegistraUsuarioSistema';
+import { ConsultaTodosUsuariosSistema_UC } from '../../application/ConsultaTodosUsuariosSistema';
+import { ConsultaUsuarioSistema_UC } from '../../application/ConsultaUsuarioSistema';
+import { AtualizaUsuarioSistema_UC } from '../../application/AtualizaUsuarioSistema';
+import { DeletaUsuarioSistema_UC } from '../../application/DeletaUsuarioSistema';
+
+// Repositórios ORM
+import { FuncionarioORMRepository } from '../persistence/repositories/FuncionarioORM.repository';
+import { FuncaoORMRepository } from '../persistence/repositories/FuncaoORM.repository';
+import { SetorORMRepository } from '../persistence/repositories/SetorORM.repository';
+import { EscalaORMRepository } from '../persistence/repositories/EscalaORM.repository';
+import { UsuarioSistemaORMRepository } from '../persistence/repositories/UsuarioSistemaORM.repository';
+
+import { IFuncionarioModelRepository } from '../../domain/repositories/IFuncionarioModel.repository';
+import { IFuncaoModelRepository } from '../../domain/repositories/IFuncaoModel.repository';
+import { ISetorModelRepository } from '../../domain/repositories/ISetorModel.repository';
+import { IEscalaModelRepository } from '../../domain/repositories/IEscalaModel.repository';
+import { IUsuarioSistemaModelRepository } from '../../domain/repositories/IUsuarioSistemaModel.repository';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -56,6 +75,19 @@ import { DeletaSetor_UC } from '../../application/DeletaSetor';
   providers: [
     ServicoCadastramento,
     
+    // Repositories
+    IFuncionarioModelRepository,
+    FuncionarioORMRepository,
+    IFuncaoModelRepository,
+    FuncaoORMRepository,
+    ISetorModelRepository,
+    SetorORMRepository,
+    IEscalaModelRepository,
+    EscalaORMRepository,
+    IUsuarioSistemaModelRepository,
+    UsuarioSistemaORMRepository,
+
+    // Aplication
     CadastraFuncionario_UC,
     ConsultaTodosFuncionarios_UC,
     AtualizaFuncionario_UC,
@@ -78,7 +110,13 @@ import { DeletaSetor_UC } from '../../application/DeletaSetor';
     ConsultaTodosEscalas_UC,
     ConsultaEscala_UC,
     AtualizaEscala_UC,
-    DeletaEscala_UC
+    DeletaEscala_UC,
+
+    RegistraUsuarioSistema_UC,
+    ConsultaTodosUsuariosSistema_UC,
+    ConsultaUsuarioSistema_UC,
+    AtualizaUsuarioSistema_UC,
+    DeletaUsuarioSistema_UC
   ],
 })
 export class AppModule {}

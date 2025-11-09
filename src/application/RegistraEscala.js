@@ -1,4 +1,4 @@
-import { Injectable, Dependencies } from "@nextjs/common";
+import { Injectable, Dependencies } from "@nestjs/common";
 import { ServicoCadastramento } from "../domain/services/ServicoCadastramento.service";
 
 @Injectable()

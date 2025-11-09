@@ -3,7 +3,7 @@ import { ServicoCadastramento } from "../domain/services/ServicoCadastramento.se
 
 @Injectable()
 @Dependencies(ServicoCadastramento)
-export class RegistraSetor_UC {
+export class RegistraUsuarioSistema_UC {
   #servicoCadastramento;
 
   constructor(servicoCadastramento) {
@@ -11,12 +11,11 @@ export class RegistraSetor_UC {
   }
 
   async run(dados) {
-    let setor = await this.#servicoCadastramento.registrarSetor(dados);
+    let usuarioSistema = await this.#servicoCadastramento.registrarUsuarioSistema(dados);
     return {
-      id: setor.id,
-      nome: setor.nome,
-      descricao: setor.descricao,
-      descricaoAtividades: setor.descricaoAtividades
+      id: usuarioSistema.id,
+      usuario: usuarioSistema.usuario,
+      // senha: usuarioSistema.senha
     };
   }
 }

@@ -1,8 +1,10 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('UsuarioSistema')
 export class UsuarioSistema {
-  @PrimaryColumn("varchar")
+  @PrimaryGeneratedColumn()
+  id;
+  @Column("varchar")
   usuario;
   @Column("varchar")
   senha;

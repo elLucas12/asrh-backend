@@ -2,11 +2,10 @@
 
 ## Description
 
-
-
 ## Installation
 
 ```bash
+# instalação
 $ npm install
 ```
 

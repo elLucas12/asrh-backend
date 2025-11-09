@@ -1,5 +1,6 @@
 import { Injectable, Dependencies } from "@nestjs/common";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { Like } from "typeorm";
 
 import { Setor } from "../entities/Setor.entity";
 import { ISetorModelRepository } from "../../../domain/repositories/ISetorModel.repository";
@@ -14,6 +15,7 @@ export class SetorORMRepository extends ISetorModelRepository {
   #setorRepo;
   
   constructor(setores) {
+    super();
     this.#setorRepo = setores;
   }
 
@@ -36,6 +38,9 @@ export class SetorORMRepository extends ISetorModelRepository {
    */
   async deletar(id) {
     const resp = await this.#setorRepo.delete(id);
+    if (!resp) {
+      return resp;
+    }
     return SetorORMRepository.createFromObject(resp);
   }
   
@@ -48,10 +53,11 @@ export class SetorORMRepository extends ISetorModelRepository {
    */
   async atualizar(id, setor) {
     let setorAlvo = await this.#setorRepo.findOneBy({id});
-    if (setorAlvo !== undefined) {
-      const resp = await this.#setorRepo.save(setor);
-      return SetorORMRepository.createFromObject(resp);
+    if (!setorAlvo) {
+      return setorAlvo;
     }
+    const resp = await this.#setorRepo.save(setor);
+    return SetorORMRepository.createFromObject(resp);
   }
   
   /**
@@ -62,6 +68,9 @@ export class SetorORMRepository extends ISetorModelRepository {
    */
   async consultar(id) {
     const resp = await this.#setorRepo.findOneBy({id});
+    if (!resp) {
+      return resp;
+    }
     return SetorORMRepository.createFromObject(resp);
   }
 
@@ -86,7 +95,7 @@ export class SetorORMRepository extends ISetorModelRepository {
   async consultarPorNome(nome) {
     const resp = await this.#setorRepo.find({
       where: {
-        nome: nome
+        nome: Like(`%${nome}%`)
       }
     });
     return resp.map(SetorORMRepository.createFromObject);
