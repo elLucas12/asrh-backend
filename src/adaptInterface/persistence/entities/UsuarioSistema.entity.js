@@ -4,7 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 export class UsuarioSistema {
   @PrimaryGeneratedColumn()
   id;
-  @Column("varchar")
+  @Column("varchar", {unique: true})
   usuario;
   @Column("varchar")
   senha;

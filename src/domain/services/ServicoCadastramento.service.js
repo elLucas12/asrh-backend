@@ -397,7 +397,7 @@ export class ServicoCadastramento {
    * 
    * @param {string} usuario String com usuário, parcial ou total, para consulta. 
    */
-  async consultarUsuariosSistemaPorUsuario(usuario) {
+  async consultarUsuarioSistemaPorUsuario(usuario) {
     return await this.#usuarioSistemaRepository.consultarPorUsuario(usuario);
   }
 

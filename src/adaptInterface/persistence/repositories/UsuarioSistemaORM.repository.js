@@ -87,18 +87,18 @@ export class UsuarioSistemaORMRepository extends IUsuarioSistemaModelRepository 
   }
   
   /**
-   * Consulta uma instância UsuarioSistema, ou mais, por meio de seu nome,
+   * Consulta uma instância UsuarioSistema por meio de seu nome,
    * 
-   * @param {string} usuario String com nome de usuário inteiro ou parcial.
+   * @param {string} usuario String com nome de usuário inteiro.
    * @returns Objeto com instância(s) encontrada(s).
    */
   async consultarPorUsuario(usuario) {
     const resp = await this.#usuarioSistemaRepo.find({
       where: {
-        usuario: Like(`%${usuario}%`)
+        usuario: usuario
       }
     });
-    return resp.map(UsuarioSistemaORMRepository.createFromObject);
+    return UsuarioSistemaORMRepository.createFromObject(resp);
   }
 
   /**
