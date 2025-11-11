@@ -39,7 +39,7 @@ jobs:
 
       # Instalação de dependências do NPM
       - name: Instalar dependências
-        run: npm install
+        run: npm install --force
 
       # Aguardar MySQL
       - name: Aguardar MySQL
@@ -80,7 +80,7 @@ jobs:
         with:
           node-version: '18'
           registry-url: 'https://npm.pkg.github.com'
-      - run: npm install
+      - run: npm install --force
       # - run: npm run build
       - run: npm publish
         env:
