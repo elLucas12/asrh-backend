@@ -1,5 +1,8 @@
 {
-  "name": "asrh-backend",
+  "name": "@elLucas12/asrh-backend",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "version": "0.0.1",
   "description": "Administrador Simplificado de Recursos Humanos (módulo backend)",
   "author": "elLucas12",
