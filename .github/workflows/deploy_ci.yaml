@@ -1,0 +1,104 @@
+name: Integração e deploy para produção
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: asrh_data
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    steps:
+      - name: Checar código do repositório
+        uses: actions/checkout@v4
+
+      # Configuração do Node versão 18
+      - name: Configurar Node.JS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # Instalação de dependências do NPM
+      - name: Instalar dependências
+        run: npm install
+
+      # Aguardar MySQL
+      - name: Aguardar MySQL
+        run: |
+          sudo apt update -y
+          sudo apt-get install -y mysql-client
+          mysqladmin ping -h 127.0.0.1 -P 3306 -u test_user -ptest_password --wait=30 --count=10
+
+      # Rodar testes de lógica
+      - name: Rodar testes Jest
+        run: npm test
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USERNAME: test_user
+          DB_PASSWORD: test_password
+          DB_NAME: asrh_data
+
+      # Rodar testes de requisição da API
+      - name: Rodar teste Jest e2e
+        run: npm test:e2e
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USERNAME: test_user
+          DB_PASSWORD: test_password
+          DB_NAME: asrh_data
+      
+  # Publica o pacote de versão como uma release no github
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://npm.pkg.github.com'
+      - run: npm install
+      # - run: npm run build
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # Fazer o deploy da aplicação
+  #     - name: Deploy da aplicação via SSH
+  #       uses: appleboy/ssh-action@v0.1.0
+  #       with:
+  #         host: ${{ secrets.HOST }}
+  #         username: ${{ secrets.USERNAME }}
+  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
+  #         port: 22
+  #         script: |
+  #           cd /opt/asrh/asrh_backend
+  #           git pull origin main
+  #           npm install
+  #           pm2 restart app

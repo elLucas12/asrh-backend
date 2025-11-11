@@ -1,10 +1,10 @@
 {
   "name": "asrh-backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Administrador Simplificado de Recursos Humanos (módulo backend)",
+  "author": "elLucas12",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "BSD-3-clause",
   "scripts": {
     "format": "prettier --write \"**/*.js\"",
     "start": "babel-node index.js",
