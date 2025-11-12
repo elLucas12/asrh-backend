@@ -50,6 +50,7 @@
     ],
     "rootDir": "src",
     "testRegex": ".spec.js$",
-    "coverageDirectory": "../coverage"
+    "coverageDirectory": "../coverage",
+    "detectOpenHandles": true
   }
 }
