@@ -11,6 +11,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     services:
       mysql:
         image: mysql:latest
@@ -36,6 +39,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+          registry-url: 'https://npm.pkg.github.com'
 
       # Instalação de dependências do NPM
       - name: Instalar dependências
@@ -67,38 +71,9 @@ jobs:
       #     DB_USERNAME: test_user
       #     DB_PASSWORD: test_password
       #     DB_NAME: asrh_data
-      
-  # Publica o pacote de versão como uma release no github
-  publish:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          registry-url: 'https://npm.pkg.github.com'
-      - run: npm install --force
-      # - run: npm run build
-      - run: npm publish
+
+      # Publica o pacote de versão como uma release no github
+      - nome: "Publicar Pacote de Versão"
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     # Fazer o deploy da aplicação
-  #     - name: Deploy da aplicação via SSH
-  #       uses: appleboy/ssh-action@v0.1.0
-  #       with:
-  #         host: ${{ secrets.HOST }}
-  #         username: ${{ secrets.USERNAME }}
-  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #         port: 22
-  #         script: |
-  #           cd /opt/asrh/asrh_backend
-  #           git pull origin main
-  #           npm install
-  #           pm2 restart app
