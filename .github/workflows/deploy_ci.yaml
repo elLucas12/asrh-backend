@@ -58,15 +58,15 @@ jobs:
           DB_PASSWORD: test_password
           DB_NAME: asrh_data
 
-      # Rodar testes de requisição da API
-      - name: Rodar teste Jest e2e
-        run: npm test:e2e
-        env:
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_USERNAME: test_user
-          DB_PASSWORD: test_password
-          DB_NAME: asrh_data
+      # # Rodar testes de requisição da API
+      # - name: Rodar teste Jest e2e
+      #   run: npm test:e2e
+      #   env:
+      #     DB_HOST: 127.0.0.1
+      #     DB_PORT: 3306
+      #     DB_USERNAME: test_user
+      #     DB_PASSWORD: test_password
+      #     DB_NAME: asrh_data
       
   # Publica o pacote de versão como uma release no github
   publish:

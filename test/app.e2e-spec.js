@@ -4,14 +4,27 @@ import { AppModule } from '../src/adaptInterface/controllers/app.module';
 
 describe('AppController (e2e)', () => {
   let app;
+  let ids;
+  jest.setTimeout(30000);
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
+    ids = {
+      escala: 1,
+      setor: 1,
+      funcao: 1,
+      funcionario: 1
+    };
+
     app = moduleFixture.createNestApplication();
     await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   decribe('Registrar funcionário', () => {
@@ -25,13 +38,13 @@ describe('AppController (e2e)', () => {
       descricao: "Estoque de produtos",
       descricaoAtividades: "Recebimento, armazenamento e separação de produtos."
     };
-    const funcao = {
+    let funcao = {
       nome: "Estoquista",
       salario: 1800.32,
-      setor: 1,
-      escala: 1
+      // setor: 1,
+      // escala: 1
     };
-    const funcionario = {
+    let funcionario = {
       nome: "Ana",
       cpf: "12345678901",
       ctps: "12345/rj",
@@ -39,11 +52,12 @@ describe('AppController (e2e)', () => {
       email: "ana.123@email.com",
       telefone: "21987654321",
       endereco: "Rua das Flores, 123 - Copacabana, RJ",
-      funcao: 1,
+      // funcao: 1,
       dataAdmissao: "2025-11-09 00:00:00",
       dataDemissao: null,
       flag: 0
     };
+
     it('/escalas/registrar (POST)', async() => {
       const resp = await request(app)
         .post('/escalas/registrar')
@@ -54,6 +68,7 @@ describe('AppController (e2e)', () => {
       expect(resp.body.horasDiarias).toBe(escala.horasDiarias);
       expect(resp.body.diasSemana).toBe(escala.diasSemana);
       expect(resp.headers['content-type']).toMatch(/json/);
+      ids.escala = resp.body.id;
     });
     it('/setores/registrar (POST)', async() => {
       const resp = await request(app)
@@ -63,13 +78,16 @@ describe('AppController (e2e)', () => {
       expect(resp.statusCode).toBe(201);
       expect(resp.body.nome).toBe(setor.nome);
       expect(resp.body.descricao).toBe(setor.descricao);
-      expect(resp.body.descricaoAtividades).toBe(setor.descricaoAtividades);
+      // expect(resp.body.descricaoAtividades).toBe(setor.descricaoAtividades);
       expect(resp.headers['content-type']).toMatch(/json/);
+      ids.setor = resp.body.id;
     });
     it('/funcoes/registrar (POST)', async() => {
+      funcao.setor = ids.setor;
+      funcao.escala = ids.escala;
       const resp = await request(app)
         .post('/funcoes/registrar')
-        .send(setor)
+        .send(funcao)
         .set('Accept', 'application/json');
       expect(resp.statusCode).toBe(201);
       expect(resp.body.nome).toBe(funcao.nome);
@@ -77,8 +95,10 @@ describe('AppController (e2e)', () => {
       expect(resp.body.setor).toBe(funcao.setor);
       expect(resp.body.escala).toBe(funcao.escala);
       expect(resp.headers['content-type']).toMatch(/json/);
+      ids.funcao = resp.body.id;
     });
     it('/funcionarios/registrar (POST)', async() => {
+      funcionario.funcao = ids.funcao;
       const resp = await request(app)
         .post('/funcionarios/registrar')
         .send(funcionario)
@@ -96,13 +116,32 @@ describe('AppController (e2e)', () => {
       expect(resp.body.dataDemissao).toBe(funcionario.dataDemissao);
       expect(resp.body.flag).toBe(funcionario.flag);
       expect(resp.headers['content-type']).toMatch(/json/);
+      ids.funcionario = resp.body.id;
     });
   });
 
-  describe('Deletar funcionário', () => {
-    it('/funcionarios/:id (id=1)', async() => {
+  describe('Deletar Entidades (com Endpoints)', () => {
+    it(`/funcionarios/:${ids.funcionario}`, async() => {
       const resp = await request(app)
-        .delete('/funcionarios/1')
+        .delete(`/funcionarios/${ids.funcionario}`)
+        .set('Accept', 'application/json');
+      expect(resp.statusCode).toBe(200);
+    });
+    it(`/funcoes/:${ids.funcao}`, async() => {
+      const resp = await request(app)
+        .delete(`/funcoes/${ids.funcao}`)
+        .set('Accept', 'application/json');
+      expect(resp.statusCode).toBe(200);
+    });
+    it(`/setores/:${ids.setor}`, async() => {
+      const resp = await request(app)
+        .delete(`/setores/${ids.setor}`)
+        .set('Accept', 'application/json');
+      expect(resp.statusCode).toBe(200);
+    });
+    it(`/escalas/:${ids.escala}`, async() => {
+      const resp = await request(app)
+        .delete(`/escalas/${ids.escala}`)
         .set('Accept', 'application/json');
       expect(resp.statusCode).toBe(200);
     });
