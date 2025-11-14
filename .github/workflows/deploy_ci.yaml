@@ -73,7 +73,7 @@ jobs:
       #     DB_NAME: asrh_data
 
       # Publica o pacote de versão como uma release no github
-      - nome: "Publicar Pacote de Versão"
+      - name: "Publicar Pacote de Versão"
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
