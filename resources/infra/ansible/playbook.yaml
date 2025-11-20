@@ -1,0 +1,23 @@
+- name: Deploy de aplicação com docker (Debian & RedHat)
+  hosts: all
+  become: yes
+  vars:
+    deploy_root: "/opt/asrh/"
+    backend_name: "asrh-backend"
+    backend_git_repo: "https://github.com/elLucas12/asrh-backend.git"
+    backend_git_version: "main"
+    backend_deploy_dir: "{{ deploy_root }}{{ backend_name }}"
+    frontend_name: "asrh-frontend"
+    frontend_git_repo: "https://github.com/elLucas12/asrh-frontend.git"
+    frontend_git_version: "main"
+    frontend_deploy_dir: "{{ deploy_root }}{{ frontend_name }}"
+    docker_compose_version: "v2.24.0"
+  tasks:
+    - name: Tarefas de Configuração
+      include_tasks: tasks/setup.yaml
+
+    - name: Tarefas do Git
+      include_tasks: tasks/git.yaml
+
+    - name: Tarefas do Docker
+      include_tasks: tasks/docker.yaml
