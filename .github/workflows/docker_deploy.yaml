@@ -3,10 +3,10 @@ name: Integração e deploy para produção
 on:
   push:
     branches:
-      - main
+      - container_main
   pull_request:
     branches:
-      - main
+      - container_main
 
 env:
   # env Container Docker
@@ -96,12 +96,6 @@ jobs:
       #     DB_PASSWORD: ${{ env.DB_PASSWORD }}
       #     DB_NAME: ${{ env.DB_NAME }}
 
-      # Publica o pacote de versão como uma release no github
-      - name: "Publicar Pacote de Versão"
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   containers:
     runs-on: ubuntu-latest
     needs: [publish]
@@ -154,5 +148,5 @@ jobs:
           port: 22
           script: |
             cd /opt/asrh/asrh-backend
-            git pull origin main
-            npm install
+            docker-compose pull
+            docker-compose restart
